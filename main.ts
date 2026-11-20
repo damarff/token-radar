@@ -3,6 +3,10 @@
 // Usage (from this repo's root):
 //   node --experimental-strip-types main.ts --input <snapshot.json> --out <out-dir>
 //
+// The grader runs it with no arguments at all (node /bot/main.ts), so when the flags are
+// missing the program reads the snapshot from $MAKEFUN_INPUT_DIR/snapshot.json (the
+// competition's sealed input, mounted at /input) and writes to $MAKEFUN_OUTPUT_DIR (mounted
+// at /output). The flags, when given, win over the environment.
 // The build refuses to finish unless the board passes the gate: it must carry at least 100 rows,
 // cover every slug the snapshot's watchlist names, rank 1..n with implied values that never rise
 // with rank, and give every row a farm plan of 3..12 steps of 20..600 characters. Then the program
@@ -37,16 +41,19 @@ interface Options {
   out: string;
 }
 
-/** The options, refused with a usage line instead of guessing defaults. */
+/** The options: the flags win; without them, the grader's environment decides. */
 function parseArgs(argv: string[]): Options {
   const o: Options = { input: '', out: '' };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--input') o.input = argv[++i]!;
     else if (argv[i] === '--out') o.out = argv[++i]!;
   }
-  if (!o.input || !o.out) {
-    console.error('usage: node --experimental-strip-types main.ts --input <snapshot.json> --out <out-dir>');
-    process.exit(EXIT_USAGE);
+  if (!o.input) {
+    const dir = process.env.MAKEFUN_INPUT_DIR || '/input';
+    o.input = join(dir, 'snapshot.json');
+  }
+  if (!o.out) {
+    o.out = process.env.MAKEFUN_OUTPUT_DIR || '/output';
   }
   return o;
 }
@@ -88,8 +95,11 @@ function main(): void {
   }
 
   // The output dir is rebuilt, never patched: a stale file from an earlier run must never survive.
-  rmSync(outDir, { recursive: true, force: true });
+  // Clear its contents without removing the directory itself: in the grader /output is a mount point.
   mkdirSync(outDir, { recursive: true });
+  for (const e of readdirSync(outDir)) {
+    rmSync(join(outDir, e), { recursive: true, force: true });
+  }
 
   writeFileSync(join(outDir, 'board.json'), `${JSON.stringify(board, null, 2)}\n`, 'utf8');
   writeFileSync(join(outDir, 'data.js'), dataScript(radar), 'utf8');
