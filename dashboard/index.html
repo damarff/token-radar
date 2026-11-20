@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — which pre-token protocol is worth farming next</title>
+<meta name="description" content="A ranked board of pre-token protocols from a sealed DefiLlama snapshot, with an implied value and a farm plan for every row.">
+<link rel="stylesheet" href="./app.css">
+<script src="../data.js"></script>
+<script src="./app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#board">Skip to the board</a>
+<header class="mast">
+  <div class="mast-inner">
+    <div class="brand">
+      <span class="radar-mark" aria-hidden="true"></span>
+      <span class="brand-name">TOKEN&nbsp;RADAR</span>
+    </div>
+    <p class="mast-meta"><span id="asOf">snapshot —</span><span>model radar-2</span><span>source: DefiLlama</span></p>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="lede">
+    <div>
+      <h1>Which pre-token protocol is worth farming next?</h1>
+      <p>Every protocol below has locked value and no token on record. The radar ranks them by what their token would be worth if it launched — from the snapshot's own figures — and gives each one a farm plan you can actually follow.</p>
+    </div>
+    <dl class="stats">
+      <div class="stat"><dt>Total implied value</dt><dd id="statTotal">—</dd></div>
+      <div class="stat"><dt>Protocols ranked</dt><dd id="statRows">—</dd></div>
+      <div class="stat"><dt>Watchlist covered</dt><dd id="statWatch">—</dd></div>
+      <div class="stat"><dt>Live-token protocols</dt><dd id="statLive">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="controls" aria-label="Board controls">
+    <div class="field">
+      <label for="q">Search</label>
+      <input id="q" type="search" placeholder="Name, slug or category" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="category">Category</label>
+      <select id="category"></select>
+    </div>
+    <div class="field">
+      <label for="chain">Chain</label>
+      <select id="chain"></select>
+    </div>
+    <div class="field">
+      <label for="minTvl">Min TVL</label>
+      <select id="minTvl">
+        <option value="0">Any</option>
+        <option value="50000000">$50M</option>
+        <option value="100000000">$100M</option>
+        <option value="500000000">$500M</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sort">Sort by</label>
+      <select id="sort">
+        <option value="rank">Rank (implied value)</option>
+        <option value="tvl">TVL</option>
+        <option value="growth">7-day growth</option>
+        <option value="efficiency">Implied per TVL</option>
+        <option value="age">Age</option>
+      </select>
+    </div>
+    <label class="check"><input id="watchlistOnly" type="checkbox"> Watchlist only</label>
+    <div class="tabs" role="group" aria-label="Token status">
+      <button id="tabPre" type="button" aria-pressed="true">Pre-token</button>
+      <button id="tabLive" type="button" aria-pressed="false">Live token</button>
+    </div>
+    <p class="count" id="count" aria-live="polite">—</p>
+  </section>
+
+  <section class="panel" aria-label="Ranked board">
+    <div class="table-wrap">
+      <table id="board">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Protocol</th>
+            <th scope="col" class="num">TVL</th>
+            <th scope="col" class="num">7d</th>
+            <th scope="col" class="num">Age</th>
+            <th scope="col" class="num">Implied value</th>
+            <th scope="col" class="num">Implied / TVL</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <table id="liveTable" hidden>
+        <thead>
+          <tr>
+            <th scope="col">Protocol</th>
+            <th scope="col" class="num">TVL</th>
+            <th scope="col" class="num">Market cap</th>
+            <th scope="col" class="num">7d</th>
+          </tr>
+        </thead>
+        <tbody id="liveRows"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty" hidden>
+      <p><strong>Nothing matches those filters.</strong></p>
+      <p>Loosen the search or clear a filter to see the board again.</p>
+      <button class="button" id="resetFilters" type="button">Clear all filters</button>
+    </div>
+  </section>
+
+  <section class="model panel" aria-labelledby="model-h">
+    <h2 id="model-h">How the radar scores a protocol</h2>
+    <p>Implied value follows only from the snapshot's own figures. No protocol name is ever special-cased; the same formula scores every row, and each row's detail view shows its own numbers.</p>
+    <p class="formula">base = TVL × 0.25<br>growth = clamp(7-day change, −60%, +150%)<br>growth multiplier = 1 + growth × 0.75 while capital flows in, × 0.9375 while it flows out<br>maturity multiplier = 0.6 + min(age, 1,095 days) ÷ 1,095 × 0.4<br>implied value = base × growth multiplier × maturity multiplier</p>
+    <p>The base multiple of 0.25 is the share of locked value a launch would price: a protocol's token is worth a fraction of the value it holds, not the whole of it. Growth matters because capital flowing in is the best signal a launch is near — and a falling TVL is weighted harder than a rising one, because farmers leave before a token that never comes. Age matters because a protocol that has run for years with no token has survived the cycles a launch has to survive. A protocol listed under 90 days ago, or one whose listing date is unknown, is treated with the neutral 365-day age.</p>
+    <p class="caveat">What the model cannot see: audits, team, points programs, and whether a token is even planned. Treat the implied value as a ranking signal, not a price target — and never farm more than you can afford to lose.</p>
+  </section>
+
+  <footer class="foot">
+    <p>Snapshot: <span id="footAsOf">—</span> · Source: DefiLlama · Model radar-2 · Board: <span id="footRows">—</span> rows · Live-token view: the market's own values, never the model's.</p>
+    <p>Built from a sealed snapshot. No network, no tracking, no prices fetched live.</p>
+  </footer>
+</main>
+
+<dialog class="detail" id="detail" aria-labelledby="detailName">
+  <div class="detail-head">
+    <div>
+      <span class="sub" id="detailRank">—</span>
+      <h2 id="detailName">—</h2>
+      <p class="sub" id="detailSub">—</p>
+    </div>
+    <button class="close" id="closeDetail" type="button">Close</button>
+  </div>
+  <div class="detail-section">
+    <h3>Why it ranks here</h3>
+    <p id="detailWhy">—</p>
+    <p id="detailRisks" class="risks" hidden></p>
+  </div>
+  <div class="detail-section">
+    <h3>Model breakdown</h3>
+    <div class="equation" id="detailModel"></div>
+  </div>
+  <div class="detail-section">
+    <h3>Farm plan</h3>
+    <ol class="steps" id="detailSteps"></ol>
+  </div>
+</dialog>
+</body>
+</html>
