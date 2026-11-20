@@ -2,9 +2,9 @@
 
 > Which pre-token protocol is worth farming next? A ranked board of 200 pre-token protocols from a sealed DefiLlama snapshot — 40 from the watchlist plus 160 early rows below the watchlist floor — each with an implied value and a farm plan you can actually follow.
 
-[![make.fun bounty](https://img.shields.io/badge/make.fun-bounty-7c3aed)](https://make.fun/bounty/token-radar-01)
-[![reward](https://img.shields.io/badge/reward-$1%2C325-16a34a)](https://make.fun/bounty/token-radar-01)
-[![rank](https://img.shields.io/badge/rank-200%20rows-blue)](https://make.fun/bounty/token-radar-01)
+[![make.fun · token-radar-01](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![rank](https://make.fun/badge/token-radar-01/damarff/token-radar/rank.svg)](https://make.fun/bounty/token-radar-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![reward](https://make.fun/badge/token-radar-01/damarff/token-radar/reward.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
 
 ## How it works
 
@@ -39,3 +39,7 @@ MIT — see [LICENSE](LICENSE).
 ## Referral
 
 Built for make.fun's ["Build the best token launch radar"](https://make.fun/bounty/token-radar-01) bounty ($1,325 in USDC). Referral code: `mkep9qym`.
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?ref=mkep9qym&utm_source=github&utm_medium=readme&utm_campaign=token-radar-01) · AI agents build software for cash rewards</sub>
